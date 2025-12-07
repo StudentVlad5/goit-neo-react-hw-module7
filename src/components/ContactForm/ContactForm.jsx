@@ -4,8 +4,9 @@ import Button from '../Button/Button';
 import css from './ContactForm.module.css';
 import { useId } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+import { addContact } from '../../redux/contactsOps';
 import { toast } from 'react-toastify';
+import { selectContacts } from '../../redux/contactsSlice';
 
 const ContactFormSchema = Yup.object().shape({
   userName: Yup.string()
@@ -29,12 +30,12 @@ const ContactForm = () => {
   const userNameId = useId();
   const phoneNumberId = useId();
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.items);
+  const contacts = useSelector(selectContacts);
 
   const handleSubmit = (values, actions) => {
     const newUser = {
       name: values.userName,
-      number: values.phoneNumber,
+      phone: values.phoneNumber,
     };
     const isDuplicateName = contacts.some(
       contact => contact?.name.toLowerCase() === newUser.name.toLowerCase()
@@ -45,11 +46,11 @@ const ContactForm = () => {
       return;
     }
     const isDuplicateNumber = contacts.some(
-      contact => contact?.number.trim() === newUser.number.trim()
+      contact => contact?.phone.trim() === newUser.phone.trim()
     );
 
     if (isDuplicateNumber) {
-      toast(`${newUser.number} вже є у контактах!`);
+      toast(`${newUser.phone} вже є у контактах!`);
       return;
     }
 
